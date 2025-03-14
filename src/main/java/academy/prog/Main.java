@@ -4,6 +4,10 @@ import academy.prog.models.Message;
 import academy.prog.models.User;
 
 import java.io.IOException;
+import java.io.InputStream;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.nio.charset.StandardCharsets;
 import java.util.Scanner;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -28,6 +32,28 @@ public class Main {
 
 			User usr = new User(login, pass);
 
+//			URL url = new URL(Utils.getURL() + "/getStatus");
+//			System.out.println("User "+usr.toString());
+//			HttpURLConnection http = (HttpURLConnection) url.openConnection();
+//
+//			InputStream is = http.getInputStream();
+//			try {
+//				byte[] buf = responseBodyToArray(is);
+//				String strBuf = new String(buf, StandardCharsets.UTF_8);
+//
+//				JsonMessages list = gson.fromJson(strBuf, JsonMessages.class);
+//				if (list != null) {
+//					for (Message m : list.getList()) {
+//						if(m.getTo() == null || m.getTo().equals(currUserLogin)){
+//							System.out.println(m);
+//							n++;
+//						}
+//					}
+//				}
+//			} finally {
+//				is.close();
+//			}
+
 			int answerUserCheck = usr.send(Utils.getURL() + "/check");
 			if (answerUserCheck == 200) { // 200 OK
 				Thread th = new Thread(new GetThread(login));
@@ -51,7 +77,7 @@ public class Main {
 				}
 			}else{
 				System.out.println("HTTP error occurred: " + answerUserCheck);
-				usr.send(Utils.getURL() + "/status");
+				usr.send(Utils.getURL() + "/addStatus");
 				System.out.println("User "+usr.toString());
 				return;
 			}
