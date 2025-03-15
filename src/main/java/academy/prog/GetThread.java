@@ -1,5 +1,6 @@
 package academy.prog;
 
+import academy.prog.jsons.JsonResponse;
 import academy.prog.models.Message;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -22,10 +23,6 @@ public class GetThread implements Runnable {
         gson = new GsonBuilder().setDateFormat("yyyy-MM-dd HH:mm:ss").create();
     }
 
-    public GetThread() {
-        gson = new GsonBuilder().setDateFormat("yyyy-MM-dd HH:mm:ss").create();
-    }
-
     @Override
     public void run() { // WebSockets
         try {
@@ -33,18 +30,26 @@ public class GetThread implements Runnable {
                 URL url = new URL(Utils.getURL() + "/get?from=" + n + "&login=" + currUserLogin);
                 HttpURLConnection http = (HttpURLConnection) url.openConnection();
 
+                System.out.println(url);
                 InputStream is = http.getInputStream();
                 try {
                     byte[] buf = responseBodyToArray(is);
                     String strBuf = new String(buf, StandardCharsets.UTF_8);
 
-                    JsonMessages list = gson.fromJson(strBuf, JsonMessages.class);
-                    if (list != null) {
-                        for (Message m : list.getList()) {
-                            if(m.getTo() == null || m.getTo().equals(currUserLogin)){
-                                System.out.println(m);
-                                n++;
+                    System.out.println("Server response: " + strBuf);
+                    JsonResponse response = gson.fromJson(strBuf, JsonResponse.class);
+
+                    if (response != null) {
+                        if(response.getMessages() != null){
+                            for (Message m : response.getMessages()) {
+                                if (m.getTo() == null || m.getTo().equals(currUserLogin)) {
+                                    System.out.println(m);
+                                    n++;
+                                }
                             }
+                        }
+                        if(response.getUsers() != null){
+                            System.out.println("Online users: " + response.getUsers());
                         }
                     }
                 } finally {
@@ -52,7 +57,7 @@ public class GetThread implements Runnable {
                 }
                 // C -> S -> x
                 // WebSockets
-                Thread.sleep(500);
+                Thread.sleep(6000);
             }
         } catch (Exception ex) {
             ex.printStackTrace();

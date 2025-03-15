@@ -15,9 +15,26 @@ public class User {
     private String password;
 
 //    private StatusType status;
+    public User(){};
 
-    public User(String name, String password){
+//    public User(String name, String password){
+//        this.login = login;
+//        this.password = password;
+//    }
+
+    public String getLogin() {
+        return login;
+    }
+
+    public void setLogin(String login) {
         this.login = login;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
         this.password = password;
     }
 
@@ -55,10 +72,14 @@ public class User {
 
     @Override
     public String toString() {
-        return new StringBuilder().append("[").append(login)
+        return "User{login='"+login+
+//                ", password='"+password+
+//                ", status='"+status+
+                "'}";
+//                new StringBuilder().append("[").append(login)
 //                .append(", ").append(password)
 //                .append(", ").append(status)
-                .append("] ")
-                .toString();
+//                .append("] ")
+//                .toString();
     }
 }

@@ -1,4 +1,4 @@
-package academy.prog;
+package academy.prog.jsons;
 
 import academy.prog.models.Message;
 

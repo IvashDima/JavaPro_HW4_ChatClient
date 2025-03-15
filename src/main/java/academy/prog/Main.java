@@ -30,8 +30,10 @@ public class Main {
 			System.out.print("Enter your password: ");
 			String pass = scanner.nextLine();
 
-			User usr = new User(login, pass);
-
+			User usr = new User();
+			usr.setLogin(login);
+			usr.setPassword(pass);
+			System.out.println(usr);
 //			URL url = new URL(Utils.getURL() + "/getStatus");
 //			System.out.println("User "+usr.toString());
 //			HttpURLConnection http = (HttpURLConnection) url.openConnection();
@@ -53,7 +55,6 @@ public class Main {
 //			} finally {
 //				is.close();
 //			}
-
 			int answerUserCheck = usr.send(Utils.getURL() + "/check");
 			if (answerUserCheck == 200) { // 200 OK
 				Thread th = new Thread(new GetThread(login));
