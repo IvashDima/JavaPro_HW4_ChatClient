@@ -1,7 +1,9 @@
 package academy.prog;
 
-import academy.prog.jsons.JsonResponse;
+import academy.prog.jsons.JsonMessages;
+import academy.prog.jsons.JsonUsers;
 import academy.prog.models.Message;
+import academy.prog.models.User;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
@@ -27,37 +29,56 @@ public class GetThread implements Runnable {
     public void run() { // WebSockets
         try {
             while ( ! Thread.interrupted()) {
-                URL url = new URL(Utils.getURL() + "/get?from=" + n + "&login=" + currUserLogin);
-                HttpURLConnection http = (HttpURLConnection) url.openConnection();
+                URL urlMessages = new URL(Utils.getURL() + "/get?from=" + n);
+                HttpURLConnection httpMessages = (HttpURLConnection) urlMessages.openConnection();
 
-                System.out.println(url);
-                InputStream is = http.getInputStream();
+                System.out.println("Server Messages url request: " + urlMessages);
+                InputStream ism = httpMessages.getInputStream();
                 try {
-                    byte[] buf = responseBodyToArray(is);
+                    byte[] buf = responseBodyToArray(ism);
                     String strBuf = new String(buf, StandardCharsets.UTF_8);
 
-                    System.out.println("Server response: " + strBuf);
-                    JsonResponse response = gson.fromJson(strBuf, JsonResponse.class);
+                    System.out.println("Server Messages response: " + strBuf);
+                    JsonMessages listM = gson.fromJson(strBuf, JsonMessages.class);
 
-                    if (response != null) {
-                        if(response.getMessages() != null){
-                            for (Message m : response.getMessages()) {
-                                if (m.getTo() == null || m.getTo().equals(currUserLogin)) {
-                                    System.out.println(m);
-                                    n++;
-                                }
+                    if (listM != null) {
+                        for (Message m : listM.getList()) {
+                            if (m.getTo() == null || m.getTo().equals(currUserLogin)) {
+                                System.out.println("New message: " + m);
+                                n++;
                             }
-                        }
-                        if(response.getUsers() != null){
-                            System.out.println("Online users: " + response.getUsers());
                         }
                     }
                 } finally {
-                    is.close();
+                    ism.close();
+                }
+                Thread.sleep(60000);
+
+
+                URL urlUsers = new URL(Utils.getURL() + "/get?login=" + currUserLogin);
+                HttpURLConnection httpUsers = (HttpURLConnection) urlUsers.openConnection();
+
+                System.out.println("Server Users url request: " + urlUsers);
+                InputStream isu = httpUsers.getInputStream();
+                try {
+                    byte[] buf = responseBodyToArray(isu);
+                    String strBuf = new String(buf, StandardCharsets.UTF_8);
+
+                    System.out.println("Server Users response: " + strBuf);
+                    JsonUsers listU = gson.fromJson(strBuf, JsonUsers.class);
+
+                    if (listU != null) {
+                        for (User u : listU.getList()) {
+                            System.out.println(u);
+                        }
+//                        System.out.println("Online users: " + listU.getList());
+                    }
+                } finally {
+                    isu.close();
                 }
                 // C -> S -> x
                 // WebSockets
-                Thread.sleep(6000);
+                Thread.sleep(500);
             }
         } catch (Exception ex) {
             ex.printStackTrace();

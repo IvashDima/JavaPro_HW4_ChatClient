@@ -27,7 +27,7 @@ public class Main {
 		try {
 			System.out.print("Enter your login: ");
 			String login = scanner.nextLine();
-			System.out.print("Enter your password: ");
+			System.out.print("Enter your password (stored in Enum=DefaultPassword on Server: ");
 			String pass = scanner.nextLine();
 
 			User usr = new User();
@@ -57,6 +57,8 @@ public class Main {
 //			}
 			int answerUserCheck = usr.send(Utils.getURL() + "/check");
 			if (answerUserCheck == 200) { // 200 OK
+
+				System.out.println("User " + usr.getLogin() + " logged in successfully!");
 				Thread th = new Thread(new GetThread(login));
 				th.setDaemon(true);
 				th.start();

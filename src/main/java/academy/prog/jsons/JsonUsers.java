@@ -1,8 +1,10 @@
 package academy.prog.jsons;
 
+import academy.prog.models.Message;
 import academy.prog.models.User;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 //import academy.prog.enums.StatusType;
@@ -14,5 +16,8 @@ public class JsonUsers {
 //            if (sourceList.get(i).getStatus() == status)
                 list.add(sourceList.get(i));
         }
+    }
+    public List<User> getList() {
+        return Collections.unmodifiableList(list);
     }
 }
