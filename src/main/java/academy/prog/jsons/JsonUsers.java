@@ -1,6 +1,5 @@
 package academy.prog.jsons;
 
-import academy.prog.models.Message;
 import academy.prog.models.User;
 
 import java.util.ArrayList;

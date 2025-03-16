@@ -29,7 +29,7 @@ public class GetThread implements Runnable {
     public void run() { // WebSockets
         try {
             while ( ! Thread.interrupted()) {
-                URL urlMessages = new URL(Utils.getURL() + "/get?from=" + n);
+                URL urlMessages = new URL(Utils.getURL() + "/getmsg?from=" + n);
                 HttpURLConnection httpMessages = (HttpURLConnection) urlMessages.openConnection();
 
                 System.out.println("Server Messages url request: " + urlMessages);
@@ -52,10 +52,10 @@ public class GetThread implements Runnable {
                 } finally {
                     ism.close();
                 }
-                Thread.sleep(60000);
+                Thread.sleep(30000);
 
 
-                URL urlUsers = new URL(Utils.getURL() + "/get?login=" + currUserLogin);
+                URL urlUsers = new URL(Utils.getURL() + "/getusr?login=" + currUserLogin);
                 HttpURLConnection httpUsers = (HttpURLConnection) urlUsers.openConnection();
 
                 System.out.println("Server Users url request: " + urlUsers);
@@ -68,8 +68,9 @@ public class GetThread implements Runnable {
                     JsonUsers listU = gson.fromJson(strBuf, JsonUsers.class);
 
                     if (listU != null) {
+                        System.out.println("Online users: ");
                         for (User u : listU.getList()) {
-                            System.out.println(u);
+                            System.out.print(u.getLogin());
                         }
 //                        System.out.println("Online users: " + listU.getList());
                     }
