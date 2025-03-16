@@ -3,7 +3,6 @@ package academy.prog;
 import academy.prog.jsons.JsonMessages;
 import academy.prog.jsons.JsonUsers;
 import academy.prog.models.Message;
-import academy.prog.models.User;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
@@ -32,13 +31,13 @@ public class GetThread implements Runnable {
                 URL urlMessages = new URL(Utils.getURL() + "/getmsg?from=" + n);
                 HttpURLConnection httpMessages = (HttpURLConnection) urlMessages.openConnection();
 
-                System.out.println("Server Messages url request: " + urlMessages);
+//                System.out.println("Server Messages url request: " + urlMessages);
                 InputStream ism = httpMessages.getInputStream();
                 try {
                     byte[] buf = responseBodyToArray(ism);
                     String strBuf = new String(buf, StandardCharsets.UTF_8);
 
-                    System.out.println("Server Messages response: " + strBuf);
+//                    System.out.println("Server Messages response: " + strBuf);
                     JsonMessages listM = gson.fromJson(strBuf, JsonMessages.class);
 
                     if (listM != null) {
@@ -54,31 +53,24 @@ public class GetThread implements Runnable {
                 }
                 Thread.sleep(30000);
 
-
                 URL urlUsers = new URL(Utils.getURL() + "/getusr?login=" + currUserLogin);
                 HttpURLConnection httpUsers = (HttpURLConnection) urlUsers.openConnection();
 
-                System.out.println("Server Users url request: " + urlUsers);
+//                System.out.println("Server Users url request: " + urlUsers);
                 InputStream isu = httpUsers.getInputStream();
                 try {
                     byte[] buf = responseBodyToArray(isu);
                     String strBuf = new String(buf, StandardCharsets.UTF_8);
 
-                    System.out.println("Server Users response: " + strBuf);
+//                    System.out.println("Server Users response: " + strBuf);
                     JsonUsers listU = gson.fromJson(strBuf, JsonUsers.class);
 
                     if (listU != null) {
-                        System.out.println("Online users: ");
-                        for (User u : listU.getList()) {
-                            System.out.print(u.getLogin());
-                        }
-//                        System.out.println("Online users: " + listU.getList());
+                        System.out.println("Online users: " + listU.getList());
                     }
                 } finally {
                     isu.close();
                 }
-                // C -> S -> x
-                // WebSockets
                 Thread.sleep(500);
             }
         } catch (Exception ex) {
